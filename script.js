@@ -8,6 +8,78 @@ app.controller("ctrl", function ($scope) {
     let canvasWidth = 800;
     let canvasHeight = 800;
 
+    $scope.scaleFactor = 0.5;
+    $scope.rotateAngle = 45;
+    $scope.parallel = function () {
+        normalizeData(data);
+        paralleProjection(data.vertices);
+        normalizeData(data);
+        drawScene(data);
+    };
+
+    $scope.cabinet = function () {
+        normalizeData(data);
+        cabinetProjection(data.vertices);
+        normalizeData(data);
+        drawScene(data);
+    };
+
+    $scope.prespctive = function () {
+        normalizeData(data);
+        prespctiveProjection(data.vertices);
+        normalizeData(data);
+        drawScene(data);
+    };
+
+    $scope.resetBoard = function () {
+        data = copyOfData;
+        clearBoard();
+        normalizeData(data);
+        drawScene(data);
+    };
+
+
+    $scope.rotateX = function () {
+        normalizeData(data);
+        let polygons = data.polygons;
+        let vertices = data.vertices;
+        data.shapes.forEach(shape => {
+            rotateShapeX(shape, polygons, vertices, $scope.rotateAngle);
+        });
+        normalizeData(data);
+        drawScene(data);
+    };
+
+    $scope.rotateY = function () {
+        normalizeData(data);
+        let polygons = data.polygons;
+        let vertices = data.vertices;
+        data.shapes.forEach(shape => {
+            rotateShapeY(shape, polygons, vertices, $scope.rotateAngle);
+        });
+        normalizeData(data);
+        drawScene(data);
+    };
+
+    $scope.rotateZ = function () {
+        normalizeData(data);
+        let polygons = data.polygons;
+        let vertices = data.vertices;
+        data.shapes.forEach(shape => {
+            rotateShapeZ(shape, polygons, vertices, $scope.rotateAngle);
+        });
+        normalizeData(data);
+        drawScene(data);
+    };
+
+    $scope.zoom = function () {
+        normalizeData(data);
+        let vertices = data.vertices;
+        zoomShapes(vertices, $scope.scaleFactor);
+        normalizeData(data);
+        drawScene(data);
+    };
+
     window.onload = function () {
         canvas = document.getElementById("workingZone");
         canvasContext = canvas.getContext("2d");
@@ -15,6 +87,7 @@ app.controller("ctrl", function ($scope) {
         normalizeData(data);
         drawScene(data);
     };
+
 
     function resetCenterMinMax() {
         center = {
@@ -100,6 +173,7 @@ app.controller("ctrl", function ($scope) {
 
     function rotatePolygonInX(polygon, angle, vertices) {
         let length = polygon.vertices.length;
+        angle = angle * (Math.PI / 180);
         let currentVertices;
         let y;
         for (let i = 0; i < length; i++) {
@@ -112,6 +186,7 @@ app.controller("ctrl", function ($scope) {
 
     function rotatePolygonInY(polygon, angle, vertices) {
         let length = polygon.vertices.length;
+        angle = angle * (Math.PI / 180);
         let currentVertices;
         let x;
         for (let i = 0; i < length; i++) {
@@ -124,6 +199,7 @@ app.controller("ctrl", function ($scope) {
 
     function rotatePolygonInZ(polygon, angle, vertices) {
         let length = polygon.vertices.length;
+        angle = angle * (Math.PI / 180);
         let currentVertices;
         let x;
         for (let i = 0; i < length; i++) {
@@ -200,13 +276,37 @@ app.controller("ctrl", function ($scope) {
         })
     }
 
-    function zoomShape(vertices, zoomFactor) {
+    function zoomShapes(vertices, zoomFactor) {
         vertices.forEach(vertex => {
             vertex.x *= zoomFactor;
             vertex.y *= zoomFactor;
             vertex.z *= zoomFactor;
         })
+    }
 
+    function paralleProjection(vertices) {
+        let temp1;
+        let temp2;
+        vertices.forEach(vertex => {
+            temp1 = vertex.x;
+            temp2 = vertex.y;
+            vertex.x = temp1;
+            vertex.y = temp2;
+        })
+    }
+
+    function cabinetProjection(vertices) {
+        vertices.forEach(vertex => {
+            vertex.x = Math.round(vertex.x + vertex.z * Math.cos(Math.PI * (45 / 180)));
+            vertex.y = Math.round(vertex.y + vertex.z * Math.sin(Math.PI * (45 / 180)));
+        })
+    }
+
+    function prespctiveProjection(vertices) {
+        vertices.forEach(vertex => {
+            vertex.x = vertex.x + ( vertex.z / 10);
+            vertex.y = vertex.y + ( vertex.z / 10);
+        })
     }
 
     function clearBoard() {
@@ -215,38 +315,13 @@ app.controller("ctrl", function ($scope) {
 
 
     function drawScene(sceneData) {
-        console.log(sceneData);
         let shapes = sceneData.shapes;
         let vertices = sceneData.vertices;
         let polygons = sceneData.polygons;
-        zoomShape(vertices, 2.0);
-        normalizeData(sceneData);
-        for (let i = 0; i < 100; i++) {
-            i++;
-            window.setTimeout(() => {
-                console.log(i);
-                clearBoard();
-
-                shapes.forEach(shapes => {
-                    rotateShapeX(shapes, polygons, vertices, i * 0.01);
-                    rotateShapeY(shapes, polygons, vertices, i * 0.01);
-                    rotateShapeZ(shapes, polygons, vertices, i * 0.01);
-                    drawShape(shapes, polygons, vertices);
-                });
-            }, 1000 * i);
-        }
+        clearBoard();
+        shapes.forEach(shapes => {
+            drawShape(shapes, polygons, vertices);
+        });
     }
 
-
-    /*
-     function drawScene(sceneData) {
-     let shapes = sceneData.shapes;
-     let vertices = sceneData.vertices;
-     let polygons = sceneData.polygons;
-     shapes.forEach(shapes => {
-     rotateShapeY(shapes, polygons, vertices, 0);
-     drawShape(shapes, polygons, vertices);
-     });
-     }
-     */
 });

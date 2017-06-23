@@ -20,17 +20,36 @@
         <br>
     </header>
     <section class="menuSection1">
-        <span>Current operation </span>
         <section class="menuSection2">
             <h4>Actions:</h4>
-            <button class="clearBoardBtn" ng-click="">Reset board</button>
-            <button class="clearBoardBtn" ng-click="">Move</button>
-            <button class="clearBoardBtn " ng-click="">Mirror</button>
-            <button class="clearBoardBtn" ng-click="">Scaling</button>
+            <button class="clearBoardBtn" ng-click="resetBoard()">Reset board</button>
+            <button class="clearBoardBtn" ng-click="parallel()">Parallel</button>
+            <button class="clearBoardBtn " ng-click="cabinet()">Cabinet</button>
+            <button class="clearBoardBtn" ng-click="prespctive()">Respective</button>
+
+            <section class="factorClass">
+                <span >Rotate angle:</span>
+                <input type="number"
+                       ng-model="rotateAngle"
+                       min="0"
+                       max="180">
+            </section>
 
             <section class="factorSection">
-                <button class="clearBoardBtn " ng-click="">Shearing</button>
-                <button class="clearBoardBtn " ng-click="">Rotation</button>
+                <button class="clearBoardBtn " ng-click="rotateX()">Rotate X</button>
+                <button class="clearBoardBtn " ng-click="rotateY()">Rotate Y</button>
+                <button class="clearBoardBtn " ng-click="rotateZ()">Rotate Z</button>
+            </section>
+
+            <section class="factorClass">
+                <span >Zoom:</span>
+                <input type="number"
+                       ng-model="scaleFactor"
+                       min="0"
+                       max="180">
+            </section>
+            <section class="factorSection">
+                <button class="clearBoardBtn " ng-click="zoom()">Zoom</button>
             </section>
 
         </section>
