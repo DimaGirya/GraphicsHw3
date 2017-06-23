@@ -1,0 +1,130 @@
+* {
+    margin: 0px;
+    padding: 0px;
+
+}
+
+header, footer, main, aside, article, section, nav {
+    display: block;
+}
+
+#wrapper {
+    width: 1000px;
+    margin: 0 auto;
+
+    border: 1px solid #A9A9A9;
+}
+
+#workingZone {
+    margin-left: 100px;
+    margin-top: 70px;
+
+    background-color: white;
+}
+
+.btnChange {
+    float: left;
+    margin-top: 10px;
+    margin-left: 15px;
+    margin-right: 10px;
+}
+
+.clearBoardBtn {
+    float: left;
+    margin-top: 10px;
+    margin-left: 15px;
+    margin-right: 10px;
+    background-color: tan;
+}
+
+.drawBtn {
+    float: left;
+    margin-right: 15px;
+    background-color: lawngreen;
+}
+
+.drawBtn2 {
+    float: left;
+    background-color: lawngreen;
+}
+
+.points {
+    float: left;
+    margin-top: 10px;
+
+}
+
+.Bezierfieldset {
+    height: 90px;
+}
+
+#polyNum {
+    margin-left: 20px;
+    width: 50px;
+}
+
+.pointsSection {
+    height: 80px;
+    background-color: #D0D0D0;
+    border: 1px solid #A9A9A9;
+    margin: auto;
+    width: 1000px;
+}
+
+.menuSection1 {
+    height: 60px;
+    background-color: #D0D0D0;
+
+    width: 1000px;
+}
+
+.menuSection2 {
+    height: 110px;
+    background-color: #D0D0D0;
+    /*border: 1px solid #A9A9A9;*/
+    width: 1000px;
+}
+
+.poligonfieldset {
+
+    margin-top: 20px;
+    width: 300px;
+    height: 50px;
+    /*display: block;*/
+}
+
+header {
+    height: 170px;
+    width: 1000px;
+    background-color: #A9A9A9;
+    color: #696969;
+    font-family: Arial;
+    border: 1px solid #A9A9A9;
+}
+
+body {
+    background-color: #F5F5DC;
+}
+
+.sek1 {
+    /*background-color: lawngreen;*/
+    width: 100%;
+    height: 40px;
+}
+
+.sek2 {
+    /*background-color: blueviolet;*/
+    width: 100%;
+    height: 40px;
+}
+
+/*.factorSection{*/
+    /*position: absolute;*/
+
+/*}*/
+
+.factorClass{
+    /*position: absolute;*/
+    margin-top: 10px;
+    float: left;
+}
