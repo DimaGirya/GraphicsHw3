@@ -200,7 +200,12 @@ app.controller("ctrl", function ($scope) {
         })
     }
 
-    function zoomShape() {
+    function zoomShape(vertices, zoomFactor) {
+        vertices.forEach(vertex => {
+            vertex.x *= zoomFactor;
+            vertex.y *= zoomFactor;
+            vertex.z *= zoomFactor;
+        })
 
     }
 
@@ -214,11 +219,14 @@ app.controller("ctrl", function ($scope) {
         let shapes = sceneData.shapes;
         let vertices = sceneData.vertices;
         let polygons = sceneData.polygons;
+        zoomShape(vertices, 2.0);
+        normalizeData(sceneData);
         for (let i = 0; i < 100; i++) {
             i++;
             window.setTimeout(() => {
                 console.log(i);
                 clearBoard();
+
                 shapes.forEach(shapes => {
                     rotateShapeX(shapes, polygons, vertices, i * 0.01);
                     rotateShapeY(shapes, polygons, vertices, i * 0.01);
