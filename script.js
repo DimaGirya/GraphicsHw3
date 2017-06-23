@@ -123,7 +123,15 @@ app.controller("ctrl", function ($scope) {
     }
 
     function rotatePolygonInZ(polygon, angle, vertices) {
-
+        let length = polygon.vertices.length;
+        let currentVertices;
+        let x;
+        for (let i = 0; i < length; i++) {
+            currentVertices = getVerticesById(vertices, polygon.vertices[i]);
+            x = currentVertices.x;
+            currentVertices.x = currentVertices.x * Math.cos(angle) - currentVertices.y * Math.sin(angle);
+            currentVertices.y = x * Math.sin(angle) + currentVertices.y * Math.cos(angle);
+        }
     }
 
     function getPolygonById(polygons, id) {
@@ -192,12 +200,15 @@ app.controller("ctrl", function ($scope) {
         })
     }
 
+    function zoomShape() {
+
+    }
 
     function clearBoard() {
         canvasContext.clearRect(0, 0, 800, 800);
     }
 
-    /*
+
     function drawScene(sceneData) {
         console.log(sceneData);
         let shapes = sceneData.shapes;
@@ -209,23 +220,25 @@ app.controller("ctrl", function ($scope) {
                 console.log(i);
                 clearBoard();
                 shapes.forEach(shapes => {
-                    rotateShapeY(shapes, polygons, vertices, i * 0.01);
                     rotateShapeX(shapes, polygons, vertices, i * 0.01);
+                    rotateShapeY(shapes, polygons, vertices, i * 0.01);
+                    rotateShapeZ(shapes, polygons, vertices, i * 0.01);
                     drawShape(shapes, polygons, vertices);
                 });
             }, 1000 * i);
         }
     }
-    */
 
-    function drawScene(sceneData) {
-        let shapes = sceneData.shapes;
-        let vertices = sceneData.vertices;
-        let polygons = sceneData.polygons;
-        shapes.forEach(shapes => {
-            rotateShapeY(shapes, polygons, vertices, 0);
-            drawShape(shapes, polygons, vertices);
-        });
-    }
 
+    /*
+     function drawScene(sceneData) {
+     let shapes = sceneData.shapes;
+     let vertices = sceneData.vertices;
+     let polygons = sceneData.polygons;
+     shapes.forEach(shapes => {
+     rotateShapeY(shapes, polygons, vertices, 0);
+     drawShape(shapes, polygons, vertices);
+     });
+     }
+     */
 });
