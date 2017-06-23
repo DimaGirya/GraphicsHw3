@@ -10,6 +10,7 @@ app.controller("ctrl", function ($scope) {
 
     $scope.scaleFactor = 0.5;
     $scope.rotateAngle = 45;
+
     $scope.parallel = function () {
         normalizeData(data);
         paralleProjection(data.vertices);
@@ -290,8 +291,8 @@ app.controller("ctrl", function ($scope) {
         vertices.forEach(vertex => {
             temp1 = vertex.x;
             temp2 = vertex.y;
-            vertex.x = temp1;
-            vertex.y = temp2;
+            vertex.x = temp2;
+            vertex.y = temp1;
         })
     }
 
@@ -312,7 +313,6 @@ app.controller("ctrl", function ($scope) {
     function clearBoard() {
         canvasContext.clearRect(0, 0, 800, 800);
     }
-
 
     function drawScene(sceneData) {
         let shapes = sceneData.shapes;
