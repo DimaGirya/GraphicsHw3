@@ -4,13 +4,83 @@ app.controller("ctrl", function ($scope) {
     let canvasContext;
     let canvas;
     let copyOfData;
+    let center, min, max;
+    let canvasWidth = 800;
+    let canvasHeight = 800;
 
     window.onload = function () {
         canvas = document.getElementById("workingZone");
         canvasContext = canvas.getContext("2d");
         copyOfData = angular.copy(data);
+        normalizeData(data);
         drawScene(data);
     };
+
+    function resetCenterMinMax() {
+        center = {
+            x: 0,
+            y: 0,
+            z: 0
+        };
+
+        max = {
+            x: 0,
+            y: 0,
+            z: 0
+        };
+        min = {
+            x: Infinity,
+            y: Infinity,
+            z: Infinity
+        };
+
+    }
+
+    function setMaxMinCenter(data) {
+        resetCenterMinMax();
+        let vertices = data.vertices;
+        let length = vertices.length;
+        for (let i = 0; i < length; i++) {
+            if (max.x < vertices[i].x) {
+                max.x = vertices[i].x;
+            }
+            if (max.y < vertices[i].y) {
+                max.y = vertices[i].y;
+            }
+            if (max.z < vertices[i].z) {
+                max.z = vertices[i].z;
+            }
+            if (min.x > vertices[i].x) {
+                min.x = vertices[i].x;
+            }
+            if (min.y > vertices[i].y) {
+                min.y = vertices[i].y;
+            }
+            if (min.z > vertices[i].z) {
+                min.z = vertices[i].z;
+            }
+        }
+        center.x = Math.round(max.x - ((max.x - min.x) / 2));
+        center.y = Math.round(max.y - ((max.y - min.y) / 2));
+        center.z = Math.round(max.z - ((max.z - min.z) / 2));
+    }
+
+    function normalizeData(data) {
+        let vertices = data.vertices;
+        let length = vertices.length;
+        setMaxMinCenter(data);
+        let point = {
+            x: canvasWidth / 2,
+            y: canvasHeight / 2,
+            z: 150
+        };
+        for (let i = 0; i < length; i++) {
+            vertices[i].x += point.x - center.x;
+            vertices[i].y += point.y - center.y;
+            vertices[i].z += point.z - center.z;
+        }
+        setMaxMinCenter(data);
+    }
 
     function drawPolygon(polygon, vertices) {
         canvasContext.fillStyle = polygon.color;
@@ -127,8 +197,9 @@ app.controller("ctrl", function ($scope) {
         canvasContext.clearRect(0, 0, 800, 800);
     }
 
-
+    /*
     function drawScene(sceneData) {
+        console.log(sceneData);
         let shapes = sceneData.shapes;
         let vertices = sceneData.vertices;
         let polygons = sceneData.polygons;
@@ -145,16 +216,16 @@ app.controller("ctrl", function ($scope) {
             }, 1000 * i);
         }
     }
+    */
 
-/*
     function drawScene(sceneData) {
         let shapes = sceneData.shapes;
         let vertices = sceneData.vertices;
         let polygons = sceneData.polygons;
         shapes.forEach(shapes => {
-            rotateShapeY(shapes, polygons, vertices, 3);
+            rotateShapeY(shapes, polygons, vertices, 0);
             drawShape(shapes, polygons, vertices);
         });
     }
-*/
+
 });
