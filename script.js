@@ -13,21 +13,27 @@ app.controller("ctrl", function ($scope) {
 
     $scope.parallel = function () {
         normalizeData(data);
-        paralleProjection(data.vertices);
+        data.shapes.forEach(shape => {
+            paralleProjectionShape(data,shape);
+        });
         normalizeData(data);
         drawScene(data);
     };
 
     $scope.cabinet = function () {
         normalizeData(data);
-        cabinetProjection(data.vertices);
+        data.shapes.forEach(shape => {
+            cabinetProjectionShape(data,shape);
+        });
         normalizeData(data);
         drawScene(data);
     };
 
     $scope.prespctive = function () {
         normalizeData(data);
-        prespctiveProjection(data.vertices);
+        data.shapes.forEach(shape => {
+            prespctiveProjectionShape(data,shape);
+        });
         normalizeData(data);
         drawScene(data);
     };
@@ -156,22 +162,6 @@ app.controller("ctrl", function ($scope) {
         setMaxMinCenter(data);
     }
 
-    function drawPolygon(polygon, vertices) {
-        canvasContext.fillStyle = polygon.color;
-        canvasContext.beginPath();
-        let firstVertices = getVerticesById(vertices, polygon.vertices[0]);
-        let currentVertices = null;
-        let length = polygon.vertices.length;
-        canvasContext.moveTo(firstVertices.x, firstVertices.y);
-        for (let i = 1; i < length; i++) {
-            currentVertices = getVerticesById(vertices, polygon.vertices[i]);
-            canvasContext.lineTo(currentVertices.x, currentVertices.y);
-        }
-        canvasContext.lineTo(firstVertices.x, firstVertices.y);
-        canvasContext.fill();
-        canvasContext.closePath();
-    }
-
     function rotatePolygonInX(polygon, angle, vertices) {
         let length = polygon.vertices.length;
         angle = angle * (Math.PI / 180);
@@ -241,15 +231,6 @@ app.controller("ctrl", function ($scope) {
         return result;
     }
 
-    function drawShape(shape, polygons, vertices) {
-        let shapePolygonsIds = shape.polygons;
-        let polygon = null;
-        shapePolygonsIds.forEach(polygonId => {
-            polygon = getPolygonById(polygons, polygonId);
-            drawPolygon(polygon, vertices);
-        })
-    }
-
     function rotateShapeX(shape, polygons, vertices, angle) {
         let shapePolygonsIds = shape.polygons;
         let polygon = null;
@@ -285,10 +266,40 @@ app.controller("ctrl", function ($scope) {
         })
     }
 
-    function paralleProjection(vertices) {
+    function cabinetProjectionShape(data,shape) {
+        shape.polygons.forEach(polygonId => {
+            let polygon = getPolygonById(data.polygons,polygonId);
+            cabinetProjectionPolygon(data,polygon);
+        })
+    }
+
+    function paralleProjectionShape(data,shape) {
+        shape.polygons.forEach(polygonId => {
+            let polygon = getPolygonById(data.polygons,polygonId);
+            paralleProjectionPolygon(data,polygon);
+        })
+    }
+
+    function prespctiveProjectionShape(data,shape){
+        shape.polygons.forEach(polygonId => {
+            let polygon = getPolygonById(data.polygons,polygonId);
+            prespctiveProjectionPolygon(data,polygon);
+        })
+    }
+
+    function cabinetProjectionPolygon(data,polygon) {
+        polygon.vertices.forEach(vertexId => {
+            let vertex = getPolygonById(data.vertices,vertexId);
+            vertex.x = Math.round(vertex.x + vertex.z * Math.cos(Math.PI * (10 / 180)));
+            vertex.y = Math.round(vertex.y + vertex.z * Math.sin(Math.PI * (10 / 180)));
+        })
+    }
+
+    function paralleProjectionPolygon(data,polygon) {
         let temp1;
         let temp2;
-        vertices.forEach(vertex => {
+        polygon.vertices.forEach(vertexId => {
+            let vertex = getPolygonById(data.vertices,vertexId);
             temp1 = vertex.x;
             temp2 = vertex.y;
             vertex.x = temp2;
@@ -296,22 +307,12 @@ app.controller("ctrl", function ($scope) {
         })
     }
 
-    function cabinetProjection(vertices) {
-        vertices.forEach(vertex => {
-            vertex.x = Math.round(vertex.x + vertex.z * Math.cos(Math.PI * (45 / 180)));
-            vertex.y = Math.round(vertex.y + vertex.z * Math.sin(Math.PI * (45 / 180)));
-        })
-    }
-
-    function prespctiveProjection(vertices) {
-        vertices.forEach(vertex => {
+    function  prespctiveProjectionPolygon(data,polygon){
+        polygon.vertices.forEach(vertexId => {
+            let vertex = getPolygonById(data.vertices, vertexId);
             vertex.x = vertex.x + ( vertex.z / 10);
             vertex.y = vertex.y + ( vertex.z / 10);
-        })
-    }
-
-    function clearBoard() {
-        canvasContext.clearRect(0, 0, 800, 800);
+        });
     }
 
     function drawScene(sceneData) {
@@ -322,6 +323,35 @@ app.controller("ctrl", function ($scope) {
         shapes.forEach(shapes => {
             drawShape(shapes, polygons, vertices);
         });
+    }
+
+    function drawShape(shape, polygons, vertices) {
+        let shapePolygonsIds = shape.polygons;
+        let polygon = null;
+        shapePolygonsIds.forEach(polygonId => {
+            polygon = getPolygonById(polygons, polygonId);
+            drawPolygon(polygon, vertices);
+        })
+    }
+
+    function drawPolygon(polygon, vertices) {
+        canvasContext.fillStyle = polygon.color;
+        canvasContext.beginPath();
+        let firstVertices = getVerticesById(vertices, polygon.vertices[0]);
+        let currentVertices = null;
+        let length = polygon.vertices.length;
+        canvasContext.moveTo(firstVertices.x, firstVertices.y);
+        for (let i = 1; i < length; i++) {
+            currentVertices = getVerticesById(vertices, polygon.vertices[i]);
+            canvasContext.lineTo(currentVertices.x, currentVertices.y);
+        }
+        canvasContext.lineTo(firstVertices.x, firstVertices.y);
+        canvasContext.fill();
+        canvasContext.closePath();
+    }
+
+    function clearBoard() {
+        canvasContext.clearRect(0, 0, 800, 800);
     }
 
 });
