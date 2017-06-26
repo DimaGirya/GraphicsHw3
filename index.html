@@ -22,13 +22,21 @@
     <section class="menuSection1">
         <section class="menuSection2">
             <h4>Actions:</h4>
+
             <button class="clearBoardBtn" ng-click="resetBoard()">Reset board</button>
+            <!--
             <button class="clearBoardBtn" ng-click="parallel()">Parallel</button>
             <button class="clearBoardBtn " ng-click="cabinet()">Cabinet</button>
             <button class="clearBoardBtn" ng-click="prespctive()">Respective</button>
+             -->
+            <form>
+                <input type="radio" ng-model="projection" ng-change="projectionChange()" value="parallel">Parallel
+                <input type="radio" ng-model="projection" ng-change="projectionChange()" value="cabinet">Cabinet
+                <input type="radio" ng-model="projection" ng-change="projectionChange()" value="prespctive">Prespctive
+            </form>
 
             <section class="factorClass">
-                <span >Rotate angle:</span>
+                <span>Rotate angle:</span>
                 <input type="number"
                        ng-model="rotateAngle"
                        min="0"
@@ -42,7 +50,7 @@
             </section>
 
             <section class="factorClass">
-                <span >Zoom:</span>
+                <span>Zoom:</span>
                 <input type="number"
                        ng-model="scaleFactor"
                        min="0"

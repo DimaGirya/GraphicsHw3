@@ -10,6 +10,7 @@ app.controller("ctrl", function ($scope) {
 
     $scope.scaleFactor = 0.5;
     $scope.rotateAngle = 45;
+    $scope.projection = "parallel";
 
     window.onload = function () {
         canvas = document.getElementById("workingZone");
@@ -21,7 +22,34 @@ app.controller("ctrl", function ($scope) {
 
     // -------------GUI functions--------------
 
-    $scope.parallel = function () {
+    $scope.projectionChange = function () {
+        normalizeData(data);
+        switch ($scope.projection) {
+            case "parallel": {
+                data.shapes.forEach(shape => {
+                    paralleProjectionShape(data, shape);
+                });
+                break;
+            }
+            case "cabinet": {
+                data.shapes.forEach(shape => {
+                    cabinetProjectionShape(data, shape);
+                });
+                break;
+            }
+            case "prespctive": {
+                data.shapes.forEach(shape => {
+                    prespctiveProjectionShape(data, shape);
+                });
+                break;
+            }
+        }
+        normalizeData(data);
+        drawScene(data);
+    };
+
+    /*
+    $scope.parallel = function parallelProjection() {
         normalizeData(data);
         data.shapes.forEach(shape => {
             paralleProjectionShape(data, shape);
@@ -47,6 +75,7 @@ app.controller("ctrl", function ($scope) {
         normalizeData(data);
         drawScene(data);
     };
+    */
 
     $scope.resetBoard = function () {
         data = copyOfData;
