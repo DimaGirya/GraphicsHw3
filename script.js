@@ -15,6 +15,7 @@ app.controller("ctrl", function ($scope) {
     window.onload = function () {
         canvas = document.getElementById("workingZone");
         canvasContext = canvas.getContext("2d");
+        validateData(data);
         copyOfData = angular.copy(data);
         //fit the data according the canvas size
         normalizeData(data);
@@ -372,6 +373,77 @@ app.controller("ctrl", function ($scope) {
 
     function clearBoard() {
         canvasContext.clearRect(0, 0, 800, 800);
+    }
+
+    function validateData(data) {
+        try {
+            validatePolygons(data.polygons);
+            validateShapes(data.shapes);
+            validateVertices(data.vertices)
+        }
+        catch (e) {
+            alert(e);
+        }
+
+    }
+
+    function validatePolygons(polygons) {
+        if (polygons === null || polygons === undefined) {
+            throw "invalid data format"
+        }
+        polygons.forEach(polygon => {
+            if (typeof polygon.id !== "number") {
+                throw "invalid data format(Id in polygon is not number)";
+            }
+            if (polygon.vertices === "undefined" || polygon.vertices.length === 0) {
+                throw "Vertices array in shape empty";
+            }
+            polygon.vertices.forEach(vertexId => {
+                if (typeof vertexId !== "number") {
+                    throw "invalid data format(Id of vertex is polygon";
+                }
+            });
+
+        });
+    }
+
+    function validateShapes(shapes) {
+        if (shapes === null || shapes === undefined) {
+            throw "invalid data format"
+        }
+        shapes.forEach(shape => {
+            if (typeof shape.id !== "number") {
+                throw "invalid data format(Id in shape is not number)";
+            }
+            if (shape.polygons === "undefined" || shape.polygons.length === 0) {
+                throw "Polygons array in shape empty";
+            }
+            shape.polygons.forEach(polygonId => {
+                if (typeof polygonId !== "number") {
+                    throw "invalid data format(Id of  polygon is shape";
+                }
+            });
+        });
+    }
+
+    function validateVertices(vertices) {
+        if (vertices === null || vertices === undefined) {
+            throw "invalid data format"
+        }
+        vertices.forEach(vertex => {
+            if (typeof vertex.id !== "number") {
+                throw "invalid data format(Id in shape is not number)";
+            }
+            if (typeof vertex.x !== "number") {
+                throw "invalid data format(X in shape is not number)";
+            }
+            if (typeof vertex.y !== "number") {
+                throw "invalid data format(Y in shape is not number)";
+            }
+            if (typeof vertex.z !== "number") {
+                throw "invalid data format(Z in shape is not number)";
+            }
+        });
     }
 
 });
