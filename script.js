@@ -16,12 +16,14 @@ app.controller("ctrl", function ($scope) {
         canvas = document.getElementById("workingZone");
         canvasContext = canvas.getContext("2d");
         copyOfData = angular.copy(data);
+        //fit the data according the canvas size
         normalizeData(data);
+        //draw the shapes that defined in the data.js file on the canvas.
         drawScene(data);
     };
 
     // -------------GUI functions--------------
-
+    //change the projection type according to the user selection
     $scope.projectionChange = function () {
         normalizeData(data);
         switch ($scope.projection) {
@@ -48,35 +50,6 @@ app.controller("ctrl", function ($scope) {
         drawScene(data);
     };
 
-    /*
-    $scope.parallel = function parallelProjection() {
-        normalizeData(data);
-        data.shapes.forEach(shape => {
-            paralleProjectionShape(data, shape);
-        });
-        normalizeData(data);
-        drawScene(data);
-    };
-
-    $scope.cabinet = function () {
-        normalizeData(data);
-        data.shapes.forEach(shape => {
-            cabinetProjectionShape(data, shape);
-        });
-        normalizeData(data);
-        drawScene(data);
-    };
-
-    $scope.prespctive = function () {
-        normalizeData(data);
-        data.shapes.forEach(shape => {
-            prespctiveProjectionShape(data, shape);
-        });
-        normalizeData(data);
-        drawScene(data);
-    };
-    */
-
     $scope.resetBoard = function () {
         data = copyOfData;
         clearBoard();
@@ -84,6 +57,7 @@ app.controller("ctrl", function ($scope) {
         drawScene(data);
     };
 
+    /*rotation functions. will be execute according the user rotate in axis button*/
     $scope.rotateX = function () {
         normalizeData(data);
         let polygons = data.polygons;
@@ -117,6 +91,7 @@ app.controller("ctrl", function ($scope) {
         drawScene(data);
     };
 
+    /*scaling function. will be execute after the user pressed the zoom button*/
     $scope.zoom = function () {
         normalizeData(data);
         data.shapes.forEach(shape => {
@@ -126,8 +101,8 @@ app.controller("ctrl", function ($scope) {
         drawScene(data);
     };
 
-    // -------------------- Shape calculation level--------
 
+    // -------------------- Shape calculation level--------
     function cabinetProjectionShape(data, shape) {
         shape.polygons.forEach(polygonId => {
             let polygon = getPolygonById(data.polygons, polygonId);
@@ -185,7 +160,6 @@ app.controller("ctrl", function ($scope) {
     }
 
     // -------------------- Polygons calculation level --------
-
     function cabinetProjectionPolygon(data, polygon) {
         polygon.vertices.forEach(vertexId => {
             let vertex = getPolygonById(data.vertices, vertexId);
@@ -262,8 +236,7 @@ app.controller("ctrl", function ($scope) {
         }
     }
 
-    //------------ Get by id functions------------
-
+    //------------ Get objects by id functions------------
     function getPolygonById(polygons, id) {
         let result = null;
         let length = polygons.length;
@@ -294,7 +267,24 @@ app.controller("ctrl", function ($scope) {
         return result;
     }
 
-    // --------------- normalize data functions
+    // --------------- normalize data functions------------
+    function normalizeData(data) {
+        let vertices = data.vertices;
+        let length = vertices.length;
+        setMaxMinCenter(data);
+        let point = {
+            x: canvasWidth / 2,
+            y: canvasHeight / 2,
+            z: 150
+        };
+        for (let i = 0; i < length; i++) {
+            vertices[i].x += point.x - center.x;
+            vertices[i].y += point.y - center.y;
+            vertices[i].z += point.z - center.z;
+        }
+        setMaxMinCenter(data);
+    }
+
     function resetCenterMinMax() {
         center = {
             x: 0,
@@ -312,7 +302,6 @@ app.controller("ctrl", function ($scope) {
             y: Infinity,
             z: Infinity
         };
-
     }
 
     function setMaxMinCenter(data) {
@@ -344,25 +333,8 @@ app.controller("ctrl", function ($scope) {
         center.z = Math.round(max.z - ((max.z - min.z) / 2));
     }
 
-    function normalizeData(data) {
-        let vertices = data.vertices;
-        let length = vertices.length;
-        setMaxMinCenter(data);
-        let point = {
-            x: canvasWidth / 2,
-            y: canvasHeight / 2,
-            z: 150
-        };
-        for (let i = 0; i < length; i++) {
-            vertices[i].x += point.x - center.x;
-            vertices[i].y += point.y - center.y;
-            vertices[i].z += point.z - center.z;
-        }
-        setMaxMinCenter(data);
-    }
 
     // ------------- Drawing functions-------------
-
     function drawScene(sceneData) {
         let shapes = sceneData.shapes;
         let vertices = sceneData.vertices;
