@@ -51,7 +51,7 @@ app.controller("ctrl", function ($scope) {
     };
 
     $scope.resetBoard = function () {
-        data = copyOfData;
+        data = angular.copy(copyOfData);
         clearBoard();
         normalizeData(data);
         drawScene(data);
@@ -163,8 +163,8 @@ app.controller("ctrl", function ($scope) {
     function cabinetProjectionPolygon(data, polygon) {
         polygon.vertices.forEach(vertexId => {
             let vertex = getPolygonById(data.vertices, vertexId);
-            vertex.x = Math.round(vertex.x + vertex.z * Math.cos(Math.PI * (10 / 180)));
-            vertex.y = Math.round(vertex.y + vertex.z * Math.sin(Math.PI * (10 / 180)));
+            vertex.x = Math.round(vertex.x + vertex.z * Math.cos(Math.PI * (45 / 180)));
+            vertex.y = Math.round(vertex.y + vertex.z * Math.sin(Math.PI * (45 / 180)));
         })
     }
 
