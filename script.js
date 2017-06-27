@@ -34,9 +34,9 @@ app.controller("ctrl", function ($scope) {
                 });
                 break;
             }
-            case "cabinet": {
+            case "oblique": {
                 data.shapes.forEach(shape => {
-                    cabinetProjectionShape(data, shape);
+                    obliqueProjectionShape (data, shape);
                 });
                 break;
             }
@@ -104,10 +104,10 @@ app.controller("ctrl", function ($scope) {
 
 
     // -------------------- Shape calculation level--------
-    function cabinetProjectionShape(data, shape) {
+    function obliqueProjectionShape(data, shape) {
         shape.polygons.forEach(polygonId => {
             let polygon = getPolygonById(data.polygons, polygonId);
-            cabinetProjectionPolygon(data, polygon);
+            obliqueProjectionPolygon(data, polygon);
         })
     }
 
@@ -161,7 +161,7 @@ app.controller("ctrl", function ($scope) {
     }
 
     // -------------------- Polygons calculation level --------
-    function cabinetProjectionPolygon(data, polygon) {
+    function obliqueProjectionPolygon(data, polygon) {
         polygon.vertices.forEach(vertexId => {
             let vertex = getPolygonById(data.vertices, vertexId);
             vertex.x = Math.round(vertex.x + vertex.z * Math.cos(Math.PI * (45 / 180)));
